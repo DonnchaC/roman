@@ -1,6 +1,5 @@
 package com.wire.bots.roman;
 
-import com.wire.bots.roman.model.OutgoingMessage;
 import com.wire.bots.sdk.tools.Logger;
 
 import javax.websocket.*;
@@ -12,18 +11,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint(value = "/proxy/await/{access_token}", encoders = MessageEncoder.class)
 public class WebSocket {
-    private final static ConcurrentHashMap<UUID, Session> sessions = new ConcurrentHashMap<>();// ProviderId, Session,
+    private final static ConcurrentHashMap<UUID, Session> sessions = new ConcurrentHashMap<>(); // ProviderId, Session,
 
-    static boolean send(UUID providerId, OutgoingMessage message) throws IOException, EncodeException {
+    static boolean send(UUID providerId, Object message, UUID botId) {
         Session session = sessions.get(providerId);
         if (session != null && session.isOpen()) {
-            Logger.info("Sending message (%s) over wss to provider: %s, bot: %s",
-                    message.type,
+            Logger.info("Sending message over wss to provider: %s, bot: %s",
                     providerId,
-                    message.botId);
+                    botId);
 
-            session.getBasicRemote().sendObject(message);
-            return true;
+            try {
+                session.getBasicRemote().sendObject(message);
+                return true;
+            } catch (IOException | EncodeException e) {
+                Logger.error("WebSocket: bot: %s, provider: %s,  error %s", botId, providerId, e);
+                return false;
+            }
         }
         return false;
     }

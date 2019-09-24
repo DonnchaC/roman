@@ -25,6 +25,7 @@ public class ProviderMapper implements ResultSetMapper<Provider> {
             ret.serviceId = getUuid(rs, "service");
             ret.name = rs.getString("name");
             ret.serviceName = rs.getString("service_name");
+            ret.type = rs.getString("type");
 
             return ret;
         } catch (SQLException e) {

@@ -8,6 +8,7 @@ import io.dropwizard.validation.OneOf;
 import io.dropwizard.validation.ValidationMethod;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IncomingMessage {
@@ -24,7 +25,7 @@ public class IncomingMessage {
     @JsonIgnore
     @ValidationMethod(message = "`image` is not a Base64 encoded string")
     public boolean isValidImage() {
-        if (!type.equals("image"))
+        if (!Objects.equals(type, "image"))
             return true;
         return image != null && image.matches("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
     }
@@ -32,7 +33,7 @@ public class IncomingMessage {
     @JsonIgnore
     @ValidationMethod(message = "`text` cannot be null")
     public boolean isValidText() {
-        if (!type.equals("text"))
+        if (!Objects.equals(type, "text"))
             return true;
         return text != null && !text.isEmpty();
     }

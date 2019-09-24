@@ -7,7 +7,8 @@ CREATE TABLE Providers (
  service_auth VARCHAR,
  service UUID,
  name VARCHAR,
- service_name VARCHAR
+ service_name VARCHAR,
+ type VARCHAR default 'wire'
 );
 
 CREATE TABLE Bots (
@@ -15,3 +16,4 @@ CREATE TABLE Bots (
  provider UUID NOT NULL
 );
 
+ALTER TABLE Providers ADD COLUMN type VARCHAR DEFAULT 'wire';
